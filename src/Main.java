@@ -44,7 +44,7 @@ class Node {
 class DirectedGraph {
     Map<Node, List<Node>> adjacencyList = new HashMap<>();
     private Map<String, Node> nodeMap = new HashMap<>();
-
+    //添加边函数
     public void addEdge(Node from, Node to) {
         // 更新边的权重（相邻次数）
         from.incrementAdjacency(to);
