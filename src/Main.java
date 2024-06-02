@@ -88,7 +88,6 @@ class DirectedGraph {
         return newNode;
     }
 
-    // 生成DOT文件内容
     void showDirectedGraph(String dotFilePath,String outputImagePath) {
         // 构造Graphviz dot命令
         String cmd = "dot -Tpng " + dotFilePath + " -o " + outputImagePath;
@@ -112,7 +111,7 @@ class DirectedGraph {
         }
     }
 
-    // 查找桥接词
+    // 功能需求3：查询桥接词
     String queryBridgeWords(String word1, String word2) {
         StringBuilder result = new StringBuilder();
         List<Node> bridgeWords = new ArrayList<>();
@@ -133,7 +132,7 @@ class DirectedGraph {
         }
         // 遍历word1的邻居，检查它们是否连接到word2
         if (!bridgeWords.isEmpty()) {
-            result.append("The bridge words from ").append(word1).append(" to ").append(word2).append(" are: ");
+            result.append("The bridge words from ").append("\"").append(word1).append("\"").append(" to ").append("\"").append(word2).append("\"").append(" are: ");
             for (int i = 0; i < bridgeWords.size(); i++) {
                 result.append(bridgeWords.get(i).getLabel());
                 if (i < bridgeWords.size() - 2) {
@@ -144,11 +143,12 @@ class DirectedGraph {
             }
             result.append(".");
         } else {
-            return "No bridge words from " + word1 + " to " + word2 + "!";
+            return "No bridge words from \"" + word1 + "\" to \"" + word2 + "\"!";
         }
         return result.toString();
     }
 
+    // 功能需求4：根据bridge word生成新文本
     String generateNewText(String inputText) {
         // 将文本分割成单词列表
         String[] words = inputText.split("\\s+");
@@ -174,7 +174,7 @@ class DirectedGraph {
                 Node bridgeWord = bridgeWords.get(random.nextInt(bridgeWords.size()));
                 result.append(words[i]).append(" ").append(bridgeWord).append(" ");
             } else {
-                // 没有桥接词，直接添加空格
+                // 没有桥接词
                 result.append(words[i]).append(" ");
             }
         }
@@ -185,6 +185,9 @@ class DirectedGraph {
     String calcShortestPath(String word1, String word2) {
         StringBuilder result = new StringBuilder();
         Node startNode = nodeMap.get((word1));
+        if (startNode == null) {
+            return "No \"" + word1 + "\" in the graph!";
+        }
 
         if(!word1.equals("") && word2.equals("")) {
             // 遍历图中所有节点，并计算从startNode到每个节点的最短路径
@@ -233,13 +236,11 @@ class DirectedGraph {
         }
 
         Node endNode = nodeMap.get((word2));
-        if (startNode == null) {
-            return "startNode is not exist!";
-        }
 
         if (endNode == null) {
-            return "endNode is not exist!";
+            return "No \"" + word2 + "\" in the graph!";
         }
+
         Pair<List<Node>, Integer> shortestPath = dijkstra(startNode, endNode);
         if (shortestPath != null) {
             result.append("The shortest path is: ").append(shortestPath.getFirst().stream().map(Node::getLabel).collect(Collectors.joining(" -> ")));
@@ -262,8 +263,6 @@ class DirectedGraph {
         // 初始化距离
         for (Node node : adjacencyList.keySet()) {
             distances.put(node, node.equals(start) ? 0 : Integer.MAX_VALUE);
-            if(node.equals("wonders"))
-                System.out.println(distances.get(node));
         }
 
         // 使用优先队列来存储待处理的节点
@@ -285,13 +284,13 @@ class DirectedGraph {
             }
         }
 
-        // 构建并返回最短路径（这里仅返回路径上的节点，不包含权重信息）
+        // 构建并返回最短路径
         if (distances.get(end) != Integer.MAX_VALUE) {
             List<Node> path = new ArrayList<>();
             for (Node node = end; node != null; node = previous.get(node)) {
                 path.add(node);
             }
-            Collections.reverse(path); // 因为我们从end回溯到start，所以需要反转列表
+            Collections.reverse(path); // 因为从end回溯到start，所以需要反转列表
             return new Pair<>(path, distances.get(end));
         }
         return new Pair<>(null, -1); // 没有找到路径
@@ -343,7 +342,6 @@ class DirectedGraph {
 
         List<Node> nodes = new ArrayList<>(adjacencyList.keySet());
         Node beginNode = nodes.get(ThreadLocalRandom.current().nextInt(nodes.size()));
-        //System.out.println("Start from node: " + beginNode.getLabel());
         Node currentNode = beginNode;
 
         while (!adjacencyList.getOrDefault(currentNode, Collections.emptyList()).isEmpty()) {
@@ -392,10 +390,6 @@ class DirectedGraph {
         return result.toString();
     }
 
-    // 添加一个方法来方便地从字符串创建Node对象
-    public Node getNode(String label) {
-        return new Node(label);
-    }
 }
 
 class Pair<T, U> {
