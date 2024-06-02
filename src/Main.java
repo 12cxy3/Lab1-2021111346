@@ -365,7 +365,7 @@ class DirectedGraph {
             if (visitedSet.contains(nextNode)) {
                 break;
             }
-            // 移动到下一个节点
+
             currentNode = nextNode;
 
             Scanner scanner = new Scanner(System.in);
