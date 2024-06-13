@@ -1,3 +1,4 @@
+package lab;
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -28,9 +29,13 @@ class Node {
     @Override
     public boolean equals(Object o) {
         // 如果两个引用指向同一个对象，则认为它们相等
-        if (this == o) return true;
+        if (this == o) {
+            return true;
+        }
         // 如果o为null或o的类型与当前对象不同，则认为它们不相等
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Node node = (Node) o;
         return Objects.equals(label, node.label);
     }
@@ -133,7 +138,8 @@ class DirectedGraph {
         }
         // 遍历word1的邻居，检查它们是否连接到word2
         if (!bridgeWords.isEmpty()) {
-            result.append("The bridge words from ").append(word1).append(" to ").append(word2).append(" are: ");
+            result.append("The bridge words from ").append(word1).append(" to ")
+                    .append(word2).append(" are: ");
             for (int i = 0; i < bridgeWords.size(); i++) {
                 result.append(bridgeWords.get(i).getLabel());
                 if (i < bridgeWords.size() - 2) {
@@ -178,7 +184,7 @@ class DirectedGraph {
                 result.append(words[i]).append(" ");
             }
         }
-        result.append(words[words.length - 1]).append(" ");
+        result.append(words[words.length - 1]);
         return result.toString();
     }
 
@@ -416,7 +422,7 @@ class Pair<T, U> {
 
 public class Main {
     public static void main(String[] args) {
-        String filePath = "./src/textfile.txt";
+        String filePath = "./src/lab/textfile.txt";
         DirectedGraph graph = new DirectedGraph();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
@@ -432,13 +438,13 @@ public class Main {
             // 功能需求1：读入文本并生成有向图
             graph.buildGraphFromText(text);
 
-        }catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         Scanner scanner = new Scanner(System.in);
         System.out.println("Do you want to choose a task: Y/N");
         String choice1 = scanner.nextLine();
-        while(!choice1.equals("Y")&&!choice1.equals("N")) {
+        while(!choice1.equals("Y") && !choice1.equals("N")) {
             System.out.println("Please input Y/N");
             choice1 = scanner.nextLine();
         }
